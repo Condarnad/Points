@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TwoLineTextView">
+        <attr name="firstLine" format="string" />
+        <attr name="secondLine" format="string" />
+    </declare-styleable>
+</resources>
