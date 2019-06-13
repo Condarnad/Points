@@ -22,8 +22,4 @@ interface PointsInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(depositionPoint: DepositionPointInfo): Completable
-
-    /*@Query("SELECT * FROM DepositionPointInfo WHERE depositionPointExternalId LIKE :externalId")
-    fun getInfoById(externalId: String): Flowable<DepositionPointInfo>*/
-
 }

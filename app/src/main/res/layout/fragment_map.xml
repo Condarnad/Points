@@ -10,6 +10,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:padding="16dp"
+        android:clipToPadding="false"
+        android:orientation="vertical">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/map_zoom_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_add_dark_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/map_zoom_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_remove_dark_24dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/map_my_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_my_location_dark_24dp" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/map_card"
         android:layout_width="match_parent"
@@ -28,11 +63,11 @@
 
             <ru.test.points.ui.widget.pointshortinfo.PointShortInfoView
                 android:id="@+id/map_point"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@color/primaryLightColor"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:background="@color/primaryLightColor"
+                android:clickable="true"
+                android:focusable="true" />
 
         </androidx.cardview.widget.CardView>
     </FrameLayout>

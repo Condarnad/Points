@@ -11,7 +11,7 @@ import java.util.*
 @Parcelize
 data class Partner(
     @PrimaryKey
-    var id: String = "",
+    var id: String,
     var name: String? = null,
     var picture: String? = null,
     var url: String? = null,

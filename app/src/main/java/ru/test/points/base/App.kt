@@ -1,6 +1,8 @@
 package ru.test.points.base
 
+import android.content.Context
 import android.util.Log
+import androidx.multidex.MultiDex
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import io.reactivex.plugins.RxJavaPlugins
@@ -19,6 +21,11 @@ class App : DaggerApplication() {
     }
 
     lateinit var appComponent: AppComponent
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     override fun onCreate() {
         super.onCreate()

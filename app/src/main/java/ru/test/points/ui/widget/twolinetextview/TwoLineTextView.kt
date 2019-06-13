@@ -3,6 +3,7 @@ package ru.test.points.ui.widget.twolinetextview
 import android.content.Context
 import android.os.Build
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -63,6 +64,8 @@ class TwoLineTextView @JvmOverloads constructor(
                     Html.fromHtml(secondLine!!, Html.FROM_HTML_MODE_LEGACY)
                 else
                     Html.fromHtml(secondLine)
+
+            second_line.movementMethod = LinkMovementMethod.getInstance()
 
         }
     }

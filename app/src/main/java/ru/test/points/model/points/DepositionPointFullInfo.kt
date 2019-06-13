@@ -10,7 +10,7 @@ data class DepositionPointFullInfo(
     @Embedded
     val partner: Partner?,
     @Embedded
-    val depositionPointInfo: DepositionPointInfo?,
+    var depositionPointInfo: DepositionPointInfo?,
     @Embedded
     val depositionPoint: DepositionPoint
 ) : Parcelable

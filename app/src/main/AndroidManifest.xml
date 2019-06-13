@@ -29,9 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.details.DetailsActivity"
-            android:parentActivityName=".ui.activities.main.MainActivity"
-            android:theme="@style/AppTheme.Transparent"/>
+        <activity
+            android:name=".ui.activities.details.DetailsActivity"
+            android:parentActivityName=".ui.activities.main.MainActivity" />
     </application>
 
 </manifest>

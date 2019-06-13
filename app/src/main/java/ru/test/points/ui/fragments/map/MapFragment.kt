@@ -1,5 +1,6 @@
 package ru.test.points.ui.fragments.map
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +23,25 @@ import ru.test.points.model.common.GeoPointBounds
 import ru.test.points.model.points.DepositionPointFullInfo
 import ru.test.points.ui.activities.details.DetailsActivity
 import javax.inject.Inject
+import androidx.core.app.ActivityOptionsCompat
+import com.google.android.gms.maps.CameraUpdate
+import com.google.android.gms.maps.CameraUpdateFactory
+import kotlinx.android.synthetic.main.layout_point_short_info.view.*
+import android.Manifest.permission
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
+import android.content.Context.LOCATION_SERVICE
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Looper
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+
 
 class MapFragment : MvpAppCompatFragment(), MapView {
 
@@ -52,6 +72,7 @@ class MapFragment : MvpAppCompatFragment(), MapView {
 
         initGoogleMap()
         initBsb()
+
     }
 
     private fun initBsb() {
@@ -83,8 +104,61 @@ class MapFragment : MvpAppCompatFragment(), MapView {
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == 1337)
+            if (permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                moveToMyLocation()
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun checkForLocationPermisstion() =
+        ContextCompat.checkSelfPermission(
+            activity!!,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+    @SuppressLint("MissingPermission")
+    private fun enableMyLocationOrRequest(): Boolean {
+        if (!checkForLocationPermisstion())
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                1337
+            )
+        else
+            gMap?.isMyLocationEnabled = true
+
+        return gMap?.isMyLocationEnabled ?: false
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun moveToMyLocation() {
+        if (enableMyLocationOrRequest())
+            LocationServices
+                .getFusedLocationProviderClient(context!!)
+                .lastLocation
+                .addOnCompleteListener {
+                    it.result?.let {
+                        gMap?.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 17F)
+                        )
+                    }
+                }
+    }
+
     private fun configMap() {
 
+        gMap?.uiSettings?.isMyLocationButtonEnabled = false
+        moveToMyLocation()
+
+        map_zoom_in.setOnClickListener {
+            gMap?.animateCamera(CameraUpdateFactory.zoomIn())
+        }
+        map_zoom_out.setOnClickListener {
+            gMap?.animateCamera(CameraUpdateFactory.zoomOut())
+        }
+        map_my_location.setOnClickListener {
+            moveToMyLocation()
+        }
     }
 
     private fun subscribeMapCallbacks() {
@@ -107,9 +181,9 @@ class MapFragment : MvpAppCompatFragment(), MapView {
 
         gMap?.let { gMap ->
 
-
             //новые точки
-            val newPoints = hashMapOf(*depositionPointsFullInfo.map { it.depositionPoint.externalId to it }.toTypedArray())
+            val newPoints =
+                hashMapOf(*depositionPointsFullInfo.map { it.depositionPoint.externalId to it }.toTypedArray())
 
             // находим точки, которые еще не отображены на экране
             val toAdd = newPoints.minus(markerPointMapping.values.map { it.depositionPoint.externalId })
@@ -158,7 +232,8 @@ class MapFragment : MvpAppCompatFragment(), MapView {
     }
 
     override fun navigateToDetails(depositionPointFullInfo: DepositionPointFullInfo) {
-
-        startActivity(DetailsActivity.prepareIntent(context!!,depositionPointFullInfo))
+        val options =
+            ActivityOptionsCompat.makeSceneTransitionAnimation(activity!!, map_point.point_image, "partner_picture")
+        startActivity(DetailsActivity.prepareIntent(context!!, depositionPointFullInfo), options.toBundle())
     }
 }

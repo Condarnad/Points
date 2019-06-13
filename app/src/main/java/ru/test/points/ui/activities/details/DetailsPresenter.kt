@@ -19,7 +19,7 @@ class DetailsPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        pointsRepository.setPointVisitedStatus(depositionPointFullInfo.depositionPoint,true)
+        pointsRepository.setPointVisitedStatus(depositionPointFullInfo,true)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()

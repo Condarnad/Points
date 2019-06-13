@@ -23,8 +23,7 @@ import javax.inject.Inject
 @InjectViewState
 class MapPresenter @Inject constructor(
     private val pointsRepository: PointsRepository,
-    private val partnersRepository: PartnersRepository,
-    private val pointsPublisher: BehaviorSubject<List<DepositionPointFullInfo>>
+    private val partnersRepository: PartnersRepository
 ) : MvpPresenter<MapView>() {
 
     var selectedPoint: DepositionPointFullInfo? = null
@@ -44,7 +43,6 @@ class MapPresenter @Inject constructor(
         pointDisposable?.dispose()
         pointsDisposable = pointsRepository
             .getPointsWithFullInfo(bounds)
-            .doOnSuccess(pointsPublisher::onNext)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { it ->

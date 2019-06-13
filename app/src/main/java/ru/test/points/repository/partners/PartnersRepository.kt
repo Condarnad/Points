@@ -5,6 +5,7 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import ru.test.points.model.common.transformCollection
 import ru.test.points.model.partners.Partner
 import ru.test.points.repository.partners.db.PartnersDao
 import ru.test.points.repository.partners.network.PartnersApi
@@ -20,10 +21,13 @@ class PartnersRepository @Inject constructor(
     val parntersApi: PartnersApi
 ) {
 
+    //10 минут
     private val CACHE_TIME = 10 * 60 * 1000
 
     private fun getPartners() =
-        parntersApi.getDepositionPartners("Credit")
+        parntersApi
+            .getDepositionPartners("Credit")//??? хз какой параметр сюда передавать
+            .transformCollection()
             .doOnSuccess {
                 partnersDao.insertAll(it)
             }
@@ -31,26 +35,10 @@ class PartnersRepository @Inject constructor(
     fun syncPartners() =
         clearCache()
             .andThen(getPartners())
-            //.onErrorResumeNext(getPartnerSync())
-
-    private fun getFromServerById(partnerId: String) =
-        getPartners().map {
-            it.find { it.id == partnerId }
-        }.toFlowable()
 
     private fun clearCache() =
         Completable.fromAction {
             partnersDao.deleteByTime(Calendar.getInstance().timeInMillis - CACHE_TIME)
         }
-
-    private fun getPartnerSync(partnerId: String) =
-        partnersDao.getPartnerByIdSync(partnerId)
-
-    /*fun getPartner(partnerId: String) =
-        clearCache()
-            .andThen(
-                Flowable.fromCallable { getPartnerSync(partnerId) }
-            )
-            .onErrorResumeNext(getFromServerById(partnerId))*/
 
 }

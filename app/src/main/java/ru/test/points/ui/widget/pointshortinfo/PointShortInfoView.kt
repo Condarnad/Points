@@ -42,6 +42,7 @@ class PointShortInfoView @JvmOverloads constructor(
     fun bindPartner(partner: Partner?) {
         GlideWrapper
             .load(context, partner?.picture.orEmpty())
+            .circleCrop()
             .into(point_image)
     }
 }

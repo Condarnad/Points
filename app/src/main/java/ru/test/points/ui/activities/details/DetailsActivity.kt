@@ -2,7 +2,11 @@ package ru.test.points.ui.activities.details
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.transition.Slide
+import android.transition.TransitionSet
+import android.view.Gravity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import dagger.android.AndroidInjection
@@ -34,21 +38,22 @@ class DetailsActivity : MvpAppCompatActivity(), DetailsView {
         details_toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+        configTransition()
     }
 
     override fun renderPointInfo(depositionPointFullInfo: DepositionPointFullInfo) {
-        details_collapsing_toolbar.title = depositionPointFullInfo.partner?.name.orEmpty()
+        details_partner_name.text = depositionPointFullInfo.partner?.name.orEmpty()
 
         details_address.setSecondLine(depositionPointFullInfo.depositionPoint.fullAddress)
         details_address_info.setSecondLine(depositionPointFullInfo.depositionPoint.addressInfo)
-        details_phones.setSecondLine(depositionPointFullInfo.depositionPoint.phones)
+        details_phones.setSecondLine(depositionPointFullInfo.depositionPoint.phones?.let { "<a href=tel:$it>$it</a>" })
         details_work_hours.setSecondLine(depositionPointFullInfo.depositionPoint.workHours)
 
         details_duration.setSecondLine(depositionPointFullInfo.partner?.depositionDuration)
         details_description.setSecondLine(depositionPointFullInfo.partner?.description)
         details_limitations.setSecondLine(depositionPointFullInfo.partner?.limitations)
         details_point_type.setSecondLine(depositionPointFullInfo.partner?.pointType)
-        details_url.setSecondLine(depositionPointFullInfo.partner?.url)
+        details_url.setSecondLine(depositionPointFullInfo.partner?.url?.let { "<a href=$it>$it</a>" })
         details_momentary.setSecondLine(
             if (depositionPointFullInfo.partner?.isMomentary == true) "Да"
             else "Нет"
@@ -56,7 +61,25 @@ class DetailsActivity : MvpAppCompatActivity(), DetailsView {
 
         GlideWrapper
             .load(this, depositionPointFullInfo.partner?.picture.orEmpty())
-            .into(details_appbar_image)
+            .circleCrop()
+            .into(details_image)
+    }
+
+    private fun configTransition(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val transitionSet = android.transition.Fade()
+            //transitionSet.excludeTarget(R.id.appbar, true)
+            transitionSet.excludeTarget(android.R.id.statusBarBackground, true)
+            transitionSet.excludeTarget(android.R.id.navigationBarBackground, true)
+
+            window.enterTransition = transitionSet
+            window.exitTransition = transitionSet
+        }
+    }
+
+    override fun onBackPressed() {
+        supportFinishAfterTransition()
+        super.onBackPressed()
     }
 
     companion object {

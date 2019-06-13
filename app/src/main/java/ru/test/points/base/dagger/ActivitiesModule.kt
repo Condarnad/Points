@@ -6,13 +6,12 @@ import ru.test.points.base.dagger.scope.ActivityScope
 import ru.test.points.ui.activities.details.DetailsActivity
 import ru.test.points.ui.activities.details.DetailsModule
 import ru.test.points.ui.activities.main.MainActivity
-import ru.test.points.ui.activities.main.MainActivityModule
 
 @Module()
 abstract class ActivitiesModule {
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = [MainActivityModule::class, MainFragmentsModule::class])
+    @ContributesAndroidInjector(modules = [MainFragmentsModule::class])
     abstract fun bindMainActivity(): MainActivity
 
     @ActivityScope

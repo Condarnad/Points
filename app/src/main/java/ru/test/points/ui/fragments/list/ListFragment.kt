@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,14 +24,18 @@ import ru.test.points.ui.activities.details.DetailsActivity
 import ru.test.points.ui.widget.pointshortinfo.PointShortInfoAdapter
 import javax.inject.Inject
 
-class ListFragment : MvpAppCompatFragment() {
+class ListFragment : MvpAppCompatFragment(), ListFragmentView {
 
-    val adapter = PointShortInfoAdapter {
-        startActivity(DetailsActivity.prepareIntent(context!!,it))
+    val adapter = PointShortInfoAdapter { point, bundle ->
+        startActivity(DetailsActivity.prepareIntent(context!!, point), bundle)
     }
 
     @Inject
-    lateinit var pointsPublisher: BehaviorSubject<List<DepositionPointFullInfo>>
+    @InjectPresenter
+    lateinit var presenter: ListPresenter
+
+    @ProvidePresenter
+    fun providePresenter() = presenter
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -45,57 +51,13 @@ class ListFragment : MvpAppCompatFragment() {
 
         list_recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         list_recycler.adapter = adapter
+    }
 
-        pointsPublisher
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                adapter.submitList(it)
-            }
+    override fun renderPoints(points: List<DepositionPointFullInfo>) {
+        adapter.submitList(points)
+    }
 
-        /*adapter.submitList(
-            mutableListOf(
-                DepositionPoint(
-                    partnerName = "KEK",
-                    location = GeoPoint(.0, .0),
-                    workHours = "Пн-Пт 08:00-20:00, Сб 08:00-18:00, Вс - Вых.",
-                    addressInfo = "Магазин Продукты на Кузнецком",
-                    fullAddress = "г Москва, ул Кузнецкий Мост, д 9/10 стр 2",
-                    phones = ""
-                ),
-                DepositionPoint(
-                    partnerName = "KEK",
-                    location = GeoPoint(.0, .0),
-                    workHours = "Пн-Пт 08:00-20:00, Сб 08:00-18:00, Вс - Вых.",
-                    addressInfo = "Магазин Продукты на Кузнецком",
-                    fullAddress = "г Москва, ул Кузнецкий Мост, д 9/10 стр 2",
-                    phones = ""
-                ),
-                DepositionPoint(
-                    partnerName = "KEK",
-                    location = GeoPoint(.0, .0),
-                    workHours = "Пн-Пт 08:00-20:00, Сб 08:00-18:00, Вс - Вых.",
-                    addressInfo = "Магазин Продукты на Кузнецком",
-                    fullAddress = "г Москва, ул Кузнецкий Мост, д 9/10 стр 2",
-                    phones = ""
-                ),
-                DepositionPoint(
-                    partnerName = "KEK",
-                    location = GeoPoint(.0, .0),
-                    workHours = "Пн-Пт 08:00-20:00, Сб 08:00-18:00, Вс - Вых.",
-                    addressInfo = "Магазин Продукты на Кузнецком",
-                    fullAddress = "г Москва, ул Кузнецкий Мост, д 9/10 стр 2",
-                    phones = ""
-                ),
-                DepositionPoint(
-                    partnerName = "KEK",
-                    location = GeoPoint(.0, .0),
-                    workHours = "Пн-Пт 08:00-20:00, Сб 08:00-18:00, Вс - Вых.",
-                    addressInfo = "Магазин Продукты на Кузнецком",
-                    fullAddress = "г Москва, ул Кузнецкий Мост, д 9/10 стр 2",
-                    phones = ""
-                )
-            )
-        )*/
+    override fun updatePoint(index: Int, newPoint: DepositionPointFullInfo) {
+        adapter.notifyItemChanged(index,newPoint)
     }
 }

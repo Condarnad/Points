@@ -11,8 +11,8 @@ import java.util.*
 @Parcelize
 data class DepositionPoint(
     @PrimaryKey
-    var externalId: String = "",
-    var partnerName: String = "",
+    var externalId: String,
+    var partnerName: String,
     @Embedded var location: GeoPoint? = null,
     var workHours: String? = null,
     var phones: String? = null,

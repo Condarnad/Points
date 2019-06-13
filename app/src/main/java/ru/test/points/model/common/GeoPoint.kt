@@ -27,3 +27,14 @@ data class GeoPoint(
     }
 
 }
+
+data class GeoPointDto(
+    var latitude: Double?,
+    var longitude: Double?
+) : Transformable<GeoPoint> {
+    override fun transform() =
+        GeoPoint(
+            latitude = latitude ?: .0,
+            longitude = longitude ?: .0
+        )
+}

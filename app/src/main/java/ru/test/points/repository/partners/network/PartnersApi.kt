@@ -5,12 +5,13 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.test.points.model.partners.Partner
+import ru.test.points.model.partners.PartnerDto
 
 interface PartnersApi {
 
     @GET("deposition_partners")
     fun getDepositionPartners(
         @Query("accountType") accountType: String
-    ): Single<List<Partner>>
+    ): Single<List<PartnerDto>>
 
 }

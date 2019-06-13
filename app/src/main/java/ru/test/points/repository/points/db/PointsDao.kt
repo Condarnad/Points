@@ -20,28 +20,8 @@ interface PointsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(depositionPoints: List<DepositionPoint>)
 
-    @Query("SELECT * FROM depositionPoint WHERE externalId LIKE :externalId LIMIT 1")
-    fun getPointById(externalId: String): Single<DepositionPoint>
-
     @Query("DELETE FROM depositionPoint WHERE point_instantiatedAt<:time")
     fun deleteByTime(time: Long)
-
-    @Query(
-        """
-        SELECT *
-        FROM depositionPoint
-        WHERE latitude BETWEEN :southeastLat AND :northeastLat
-        AND longitude BETWEEN :southeastLon AND :northeastLon
-        LIMIT 500
-        """
-    )
-    fun getAllInBounds(
-        northeastLat: Double,
-        northeastLon: Double,
-        southeastLat: Double,
-        southeastLon: Double
-    ): Single<List<DepositionPoint>>
-
 
     @Query(
         """
