@@ -1,13 +1,15 @@
 package ru.test.points.ui.widget.twolinetextview
 
 import android.content.Context
+import android.os.Build
+import android.text.Html
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.TextView
+import kotlinx.android.synthetic.main.view_two_line_text.view.*
 import ru.test.points.R
 
-class TwoLineReversedView @JvmOverloads constructor(
+class TwoLineTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -53,8 +55,15 @@ class TwoLineReversedView @JvmOverloads constructor(
         if (firstLine.isNullOrBlank() || secondLine.isNullOrBlank())
             visibility = View.GONE
         else {
-            findViewById<TextView>(R.id.first_line).text = firstLine
-            findViewById<TextView>(R.id.second_line).text = secondLine
+            visibility = View.VISIBLE
+            first_line.text = firstLine
+
+            second_line.text =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    Html.fromHtml(secondLine!!, Html.FROM_HTML_MODE_LEGACY)
+                else
+                    Html.fromHtml(secondLine)
+
         }
     }
 }

@@ -49,11 +49,77 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:firstLine="Адрес" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_address_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Дополнительная информация" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Сайт" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_point_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Тип" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_momentary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Моментальная" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Время перевода" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_limitations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Ограничения" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_work_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Рабочие часы" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_phones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Телефон" />
+
+            <ru.test.points.ui.widget.twolinetextview.TwoLineTextView
+                android:id="@+id/details_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:firstLine="Описание" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>

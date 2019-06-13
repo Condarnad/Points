@@ -3,7 +3,6 @@ package ru.test.points.ui.activities.details
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import dagger.android.AndroidInjection
@@ -39,6 +38,21 @@ class DetailsActivity : MvpAppCompatActivity(), DetailsView {
 
     override fun renderPointInfo(depositionPointFullInfo: DepositionPointFullInfo) {
         details_collapsing_toolbar.title = depositionPointFullInfo.partner?.name.orEmpty()
+
+        details_address.setSecondLine(depositionPointFullInfo.depositionPoint.fullAddress)
+        details_address_info.setSecondLine(depositionPointFullInfo.depositionPoint.addressInfo)
+        details_phones.setSecondLine(depositionPointFullInfo.depositionPoint.phones)
+        details_work_hours.setSecondLine(depositionPointFullInfo.depositionPoint.workHours)
+
+        details_duration.setSecondLine(depositionPointFullInfo.partner?.depositionDuration)
+        details_description.setSecondLine(depositionPointFullInfo.partner?.description)
+        details_limitations.setSecondLine(depositionPointFullInfo.partner?.limitations)
+        details_point_type.setSecondLine(depositionPointFullInfo.partner?.pointType)
+        details_url.setSecondLine(depositionPointFullInfo.partner?.url)
+        details_momentary.setSecondLine(
+            if (depositionPointFullInfo.partner?.isMomentary == true) "Да"
+            else "Нет"
+        )
 
         GlideWrapper
             .load(this, depositionPointFullInfo.partner?.picture.orEmpty())
