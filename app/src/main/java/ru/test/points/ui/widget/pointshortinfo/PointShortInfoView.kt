@@ -11,6 +11,8 @@ import ru.test.points.model.partners.Partner
 import ru.test.points.model.points.DepositionPoint
 import ru.test.points.model.points.DepositionPointFullInfo
 import ru.test.points.model.points.DepositionPointInfo
+import ru.test.points.ui.utils.setTextOrGone
+import ru.test.points.ui.utils.setVisibleOrGone
 
 class PointShortInfoView @JvmOverloads constructor(
     context: Context,
@@ -24,19 +26,18 @@ class PointShortInfoView @JvmOverloads constructor(
     }
 
     fun bind(depositionPoint: DepositionPointFullInfo) {
-        point_address.text = depositionPoint.depositionPoint.fullAddress
-        point_title.text = depositionPoint.partner?.name
+
+        point_address.setTextOrGone(depositionPoint.depositionPoint.fullAddress)
+
+        //Наверное не стоит использовать id партенра для отображения во вьюхе, если нет интернета
+        point_title.text = depositionPoint.partner?.name ?: depositionPoint.depositionPoint.partnerName
 
         bindPointInfo(depositionPoint.depositionPointInfo)
         bindPartner(depositionPoint.partner)
     }
 
     fun bindPointInfo(depositionPointInfo: DepositionPointInfo?) {
-        point_seen_indicator.visibility =
-            if (depositionPointInfo?.isVisited == true)
-                View.GONE
-            else
-                View.VISIBLE
+        point_seen_indicator.setVisibleOrGone(depositionPointInfo?.isVisited != true)
     }
 
     fun bindPartner(partner: Partner?) {

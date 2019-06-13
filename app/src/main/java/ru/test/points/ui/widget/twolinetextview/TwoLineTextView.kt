@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.view_two_line_text.view.*
 import ru.test.points.R
+import ru.test.points.ui.utils.setVisibleOrGone
 
 class TwoLineTextView @JvmOverloads constructor(
     context: Context,
@@ -53,20 +54,21 @@ class TwoLineTextView @JvmOverloads constructor(
     }
 
     private fun updateView() {
-        if (firstLine.isNullOrBlank() || secondLine.isNullOrBlank())
-            visibility = View.GONE
-        else {
-            visibility = View.VISIBLE
-            first_line.text = firstLine
 
+        setVisibleOrGone(!(firstLine.isNullOrBlank() || secondLine.isNullOrBlank()))
+
+
+        first_line.text = firstLine
+
+        secondLine?.let {
             second_line.text =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                    Html.fromHtml(secondLine!!, Html.FROM_HTML_MODE_LEGACY)
+                    Html.fromHtml(secondLine, Html.FROM_HTML_MODE_LEGACY)
                 else
                     Html.fromHtml(secondLine)
-
-            second_line.movementMethod = LinkMovementMethod.getInstance()
-
         }
+
+        second_line.movementMethod = LinkMovementMethod.getInstance()
+
     }
 }

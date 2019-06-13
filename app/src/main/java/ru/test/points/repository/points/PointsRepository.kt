@@ -59,6 +59,8 @@ class PointsRepository @Inject constructor(
             .transformCollection()
             .map {
                 pointsDao.insertAll(it)
+                //не очень хоршо, что точки отображаются только после получения партнеров
+                //стоит сделать асинхронным и доставать из базы
                 partnersRepository.syncPartners().blockingGet()
                 clearCacheAndGetInBounds(bounds).blockingGet()
             }
