@@ -67,12 +67,14 @@ class MapFragment : MvpAppCompatFragment(), MapView {
         inflater.inflate(R.layout.fragment_map, container, false)
 
 
+    var firstLaunch = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initGoogleMap()
         initBsb()
 
+        firstLaunch = savedInstanceState == null
     }
 
     private fun initBsb() {
@@ -101,6 +103,9 @@ class MapFragment : MvpAppCompatFragment(), MapView {
 
             configMap()
             subscribeMapCallbacks()
+
+            if (firstLaunch)
+                moveToMyLocation(instant = true)
         }
     }
 
@@ -131,16 +136,16 @@ class MapFragment : MvpAppCompatFragment(), MapView {
     }
 
     @SuppressLint("MissingPermission")
-    private fun moveToMyLocation() {
+    private fun moveToMyLocation(instant: Boolean = false) {
         if (enableMyLocationOrRequest())
             LocationServices
                 .getFusedLocationProviderClient(context!!)
                 .lastLocation
                 .addOnCompleteListener {
                     it.result?.let {
-                        gMap?.animateCamera(
-                            CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 17F)
-                        )
+                        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), 17F)
+                        if (instant) gMap?.moveCamera(cameraUpdate)
+                        else gMap?.animateCamera(cameraUpdate)
                     }
                 }
     }
@@ -148,7 +153,6 @@ class MapFragment : MvpAppCompatFragment(), MapView {
     private fun configMap() {
 
         gMap?.uiSettings?.isMyLocationButtonEnabled = false
-        moveToMyLocation()
 
         map_zoom_in.setOnClickListener {
             gMap?.animateCamera(CameraUpdateFactory.zoomIn())
@@ -177,6 +181,16 @@ class MapFragment : MvpAppCompatFragment(), MapView {
         }
     }
 
+
+    //Я специально не делал кластеризацию, потому что как мне кажется смысл задания не в этом
+    //Ее достаточно просто реализовать и даже не партися по поводу отрисовки точек
+    //Здесь рисуются только новые точки, которых еще нет на экране
+    //Старые точки удаляются
+    //Используется пересечение множеств
+    //Общая сложность O(N)
+    //Еще есть проблема в том, что точки с сервера прилетают кучкой возле центра карты, а из базы достаются по мере добавления
+    //Соотвественно если смотреть на Москву ппри маленьком зуме, в данном случае точки раскиданы каким-то случайным образом,
+    // а с сервера прилетает большая куча точек в центре Москвы
     override fun renderPoints(depositionPointsFullInfo: List<DepositionPointFullInfo>) {
 
         gMap?.let { gMap ->

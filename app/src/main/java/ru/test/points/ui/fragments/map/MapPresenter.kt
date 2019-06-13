@@ -40,7 +40,7 @@ class MapPresenter @Inject constructor(
     var pointsDisposable: Disposable? = null
     fun updatePoints(bounds: GeoPointBounds) {
 
-        pointDisposable?.dispose()
+        pointsDisposable?.dispose()
         pointsDisposable = pointsRepository
             .getPointsWithFullInfo(bounds)
             .subscribeOn(Schedulers.io())
